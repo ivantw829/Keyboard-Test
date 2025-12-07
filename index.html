@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>鍵盤按鍵診斷工具</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #f5f5f7;
+    --text: #1d1d1f;
+    --key-bg: #ffffff;
+    --key-text: #000000;
+    --key-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    --accent: #0071e3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e;
+      --text: #f5f5f7;
+      --key-bg: #2c2c2e;
+      --key-text: #f5f5f7;
+      --key-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    }
+  }
+
+  body {
+    margin: 0;
+    padding: 40px 20px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+  }
+  .desc {
+    font-size: 17px;
+    color: #86868b;
+    margin-bottom: 32px;
+  }
+
+  #resetBtn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,113,227,0.3);
+    transition: all 0.2s ease;
+    margin-bottom: 40px;
+  }
+  #resetBtn:hover { background: #0060c8; }
+  #resetBtn:active { transform: scale(0.98); }
+
+  .keyboard-container {
+    background: #000000;
+    padding: 20px 18px 28px;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+
+  .row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .key {
+    position: relative;
+    background: var(--key-bg);
+    color: var(--key-text);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 500;
+    box-shadow: var(--key-shadow);
+    transition: all 0.15s ease;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  /* 按下動畫 */
+  .key:active, .key.pressed {
+    transform: translateY(2px);
+  }
+
+  /* 計數徽章（右上角） */
+  .badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    min-width: 28px;
+    height: 28px;
+    border-radius: 14px;
+    background: #34c759;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+  .badge.green { background: #34c759; color: white; }
+  .badge.yellow { background: #ffcc00; color: black; }
+  .badge.red    { background: #ff3b30; animation: pulse 2s infinite; }
+
+  /* 紅色驚嘆號（左上角） */
+  .warning {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: 32px;
+    height: 32px;
+    background: #ff3b30;
+    color: white;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(255,59,48,0.5);
+    animation: pop 0.3s ease;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+  @keyframes pop {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  /* 按鍵尺寸 */
+  .key { height: 56px; width: 56px; }
+  .w15  { width: calc(56px * 1.5); }
+  .w175 { width: calc(56px * 1.75); }
+  .w225 { width: calc(56px * 2.25); }
+  .w625 { width: calc(56px * 6.25); }
+  .w7   { width: calc(56px * 7); }
+  .return { border-radius: 0 12px 12px 0; }
+</style>
+</head>
+<body>
+
+<h1>鍵盤按鍵診斷工具</h1>
+<p class="desc">點擊按鍵標記問題（紅色驚嘆號），或用實體鍵盤測試次數</p>
+<button id="resetBtn">重設所有計數與標記</button>
+
+<div class="keyboard-container">
+
+  <!-- Row 1 -->
+  <div class="row">
+    <div class="key" data-key="Escape">esc</div>
+    <div class="key" data-key="F1">F1</div>
+    <div class="key" data-key="F2">F2</div>
+    <div class="key" data-key="F3">F3</div>
+    <div class="key" data-key="F4">F4</div>
+    <div class="key" data-key="F5">F5</div>
+    <div class="key" data-key="F6">F6</div>
+    <div class="key" data-key="F7">F7</div>
+    <div class="key" data-key="F8">F8</div>
+    <div class="key" data-key="F9">F9</div>
+    <div class="key" data-key="F10">F10</div>
+    <div class="key" data-key="F11">F11</div>
+    <div class="key" data-key="F12">F12</div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="row">
+    <div class="key" data-key="`">`</div>
+    <div class="key" data-key="1">1</div>
+    <div class="key" data-key="2">2</div>
+    <div class="key" data-key="3">3</div>
+    <div class="key" data-key="4">4</div>
+    <div class="key" data-key="5">5</div>
+    <div class="key" data-key="6">6</div>
+    <div class="key" data-key="7">7</div>
+    <div class="key" data-key="8">8</div>
+    <div class="key" data-key="9">9</div>
+    <div class="key" data-key="0">0</div>
+    <div class="key" data-key="-">−</div>
+    <div class="key" data-key="=">=</div>
+    <div class="key w175" data-key="Backspace">delete</div>
+  </div>
+
+  <!-- Row 3 -->
+  <div class="row">
+    <div class="key w15" data-key="Tab">Tab</div>
+    <div class="key" data-key="q">Q</div>
+    <div class="key" data-key="w">W</div>
+    <div class="key" data-key="e">E</div>
+    <div class="key" data-key="r">R</div>
+    <div class="key" data-key="t">T</div>
+    <div class="key" data-key="y">Y</div>
+    <div class="key" data-key="u">U</div>
+    <div class="key" data-key="i">I</div>
+    <div class="key" data-key="o">O</div>
+    <div class="key" data-key="p">P</div>
+    <div class="key" data-key="[">[</div>
+    <div class="key" data-key="]">]</div>
+    <div class="key w15" data-key="\">\\</div>
+  </div>
+
+  <!-- Row 4 -->
+  <div class="row">
+    <div class="key w175" data-key="CapsLock">Caps Lock</div>
+    <div class="key" data-key="a">A</div>
+    <div class="key" data-key="s">S</div>
+    <div class="key" data-key="d">D</div>
+    <div class="key" data-key="f">F</div>
+    <div class="key" data-key="g">G</div>
+    <div class="key" data-key="h">H</div>
+    <div class="key" data-key="j">J</div>
+    <div class="key" data-key="k">K</div>
+    <div class="key" data-key="l">L</div>
+    <div class="key" data-key=";">;</div>
+    <div class="key" data-key="'">'</div>
+    <div class="key w225 return" data-key="Enter">return</div>
+  </div>
+
+  <!-- Row 5 -->
+  <div class="row">
+    <div class="key w225" data-key="Shift">Shift</div>
+    <div class="key" data-key="z">Z</div>
+    <div class="key" data-key="x">X</div>
+    <div class="key" data-key="c">C</div>
+    <div class="key" data-key="v">V</div>
+    <div class="key" data-key="b">B</div>
+    <div class="key" data-key="n">N</div>
+    <div class="key" data-key="m">M</div>
+    <div class="key" data-key=",">,</div>
+    <div class="key" data-key=".">.</div>
+    <div class="key" data-key="/">/</div>
+    <div class="key w225" data-key="ShiftR">Shift</div>
+  </div>
+
+  <!-- Row 6 -->
+  <div class="row">
+    <div class="key w15" data-key="fn">fn</div>
+    <div class="key w15" data-key="Control">control</div>
+    <div class="key w15" data-key="Alt">option</div>
+    <div class="key w15" data-key="Meta">command</div>
+    <div class="key w7" data-key=" ">Space</div>
+    <div class="key w15" data-key="MetaR">command</div>
+    <div class="key w15" data-key="AltR">option</div>
+    <div class="key" data-key="ArrowLeft">Left</div>
+    <div class="key" style="display:flex;flex-direction:column;gap:2px;">
+      <div class="key" data-key="ArrowUp">Up</div>
+      <div class="key" data-key="ArrowDown">Down</div>
+    </div>
+    <div class="key" data-key="ArrowRight">Right</div>
+  </div>
+</div>
+
+<script>
+const counter = {};
+const warned = new Set(); // 儲存有問題的按鍵
+
+// 初始化所有有 data-key 的按鍵（避免包含作為容器的 .key）
+document.querySelectorAll('.key[data-key]').forEach(keyEl => {
+  const key = keyEl.dataset.key;
+
+  // 計數徽章
+  const badge = document.createElement('div');
+  badge.className = 'badge green';
+  badge.textContent = '0';
+  keyEl.appendChild(badge);
+
+  // 點擊切換警告標記
+  keyEl.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (warned.has(key)) {
+      warned.delete(key);
+      keyEl.querySelector('.warning')?.remove();
+    } else {
+      warned.add(key);
+      const warn = document.createElement('div');
+      warn.className = 'warning';
+      warn.textContent = '!';
+      keyEl.appendChild(warn);
+    }
+  });
+});
+
+// 實體鍵盤輸入（只計數，不影響標記）
+document.addEventListener('keydown', e => {
+  e.preventDefault();
+  let key = e.key;
+  if (key === ' ') key = ' ';
+  if (e.key === 'Meta') key = e.location === 1 ? 'Meta' : 'MetaR';
+  if (e.key === 'Alt') key = e.location === 1 ? 'Alt' : 'AltR';
+  if (e.key === 'Shift') key = e.location === 1 ? 'Shift' : 'ShiftR';
+
+  const el = document.querySelector(`[data-key="${key}"]`);
+  if (el) {
+    counter[key] = (counter[key] || 0) + 1;
+    const badge = el.querySelector('.badge');
+    badge.textContent = counter[key];
+    badge.classList.remove('green','yellow','red');
+    if (counter[key] >= 6) badge.classList.add('red');
+    else if (counter[key] >= 3) badge.classList.add('yellow');
+    else badge.classList.add('green');
+
+    // 按下動畫
+    el.classList.add('pressed');
+    setTimeout(() => el.classList.remove('pressed'), 150);
+  }
+});
+
+// 重設按鈕
+document.getElementById('resetBtn').addEventListener('click', () => {
+  Object.keys(counter).forEach(k => delete counter[k]);
+  warned.clear();
+  document.querySelectorAll('.badge').forEach(b => {
+    b.textContent = '0';
+    b.className = 'badge green';
+  });
+  document.querySelectorAll('.warning').forEach(w => w.remove());
+});
+</script>
+</body>
+</html>
