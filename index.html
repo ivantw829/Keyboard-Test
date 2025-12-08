@@ -92,6 +92,14 @@
     margin-bottom: 32px;
   }
 
+  .toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
   #resetBtn {
     background: var(--accent);
     color: white;
@@ -118,9 +126,18 @@
     font-size: 17px;
     font-weight: 600;
     cursor: pointer;
-    margin-left: 12px;
   }
   #themeToggleBtn:active { transform: translateY(1px); }
+
+  /* 佈局下拉 */
+  #layoutSelect {
+    border: 1px solid var(--btn-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 16px;
+    background: var(--container-bg);
+    color: var(--text);
+  }
 
   .keyboard-container {
     background: var(--container-bg);
@@ -223,148 +240,298 @@
 <main>
 <h1>鍵盤按鍵診斷工具</h1>
 <p class="desc">點擊按鍵標記問題（紅色驚嘆號），或用實體鍵盤測試次數</p>
-<div style="display:flex;gap:8px;align-items:center;margin-bottom:20px;">
+<div class="toolbar">
   <button id="resetBtn" aria-label="重設所有按鍵計數與標記">重設所有計數與標記</button>
   <button id="themeToggleBtn" aria-pressed="false" aria-label="切換深淺主題">主題：系統</button>
+  <label for="layoutSelect" style="display:flex;align-items:center;gap:8px;font-weight:600;color:var(--text);">
+    佈局
+    <select id="layoutSelect" aria-label="選擇鍵盤佈局">
+      <option value="mac">Mac (ANSI)</option>
+      <option value="win">Windows (ANSI)</option>
+    </select>
+  </label>
 </div>
 
 <section class="keyboard-container" aria-label="鍵盤按鍵診斷區域">
-
-  <!-- Row 1 -->
-  <div class="row">
-    <div class="key" data-key="Escape">esc</div>
-    <div class="key" data-key="F1">F1</div>
-    <div class="key" data-key="F2">F2</div>
-    <div class="key" data-key="F3">F3</div>
-    <div class="key" data-key="F4">F4</div>
-    <div class="key" data-key="F5">F5</div>
-    <div class="key" data-key="F6">F6</div>
-    <div class="key" data-key="F7">F7</div>
-    <div class="key" data-key="F8">F8</div>
-    <div class="key" data-key="F9">F9</div>
-    <div class="key" data-key="F10">F10</div>
-    <div class="key" data-key="F11">F11</div>
-    <div class="key" data-key="F12">F12</div>
-  </div>
-
-  <!-- Row 2 -->
-  <div class="row">
-    <div class="key" data-key="`">`</div>
-    <div class="key" data-key="1">1</div>
-    <div class="key" data-key="2">2</div>
-    <div class="key" data-key="3">3</div>
-    <div class="key" data-key="4">4</div>
-    <div class="key" data-key="5">5</div>
-    <div class="key" data-key="6">6</div>
-    <div class="key" data-key="7">7</div>
-    <div class="key" data-key="8">8</div>
-    <div class="key" data-key="9">9</div>
-    <div class="key" data-key="0">0</div>
-    <div class="key" data-key="-">−</div>
-    <div class="key" data-key="=">=</div>
-    <div class="key w175" data-key="Backspace">delete</div>
-  </div>
-
-  <!-- Row 3 -->
-  <div class="row">
-    <div class="key w15" data-key="Tab">Tab</div>
-    <div class="key" data-key="q">Q</div>
-    <div class="key" data-key="w">W</div>
-    <div class="key" data-key="e">E</div>
-    <div class="key" data-key="r">R</div>
-    <div class="key" data-key="t">T</div>
-    <div class="key" data-key="y">Y</div>
-    <div class="key" data-key="u">U</div>
-    <div class="key" data-key="i">I</div>
-    <div class="key" data-key="o">O</div>
-    <div class="key" data-key="p">P</div>
-    <div class="key" data-key="[">[</div>
-    <div class="key" data-key="]">]</div>
-    <div class="key w15" data-key="\">\\</div>
-  </div>
-
-  <!-- Row 4 -->
-  <div class="row">
-    <div class="key w175" data-key="CapsLock">Caps Lock</div>
-    <div class="key" data-key="a">A</div>
-    <div class="key" data-key="s">S</div>
-    <div class="key" data-key="d">D</div>
-    <div class="key" data-key="f">F</div>
-    <div class="key" data-key="g">G</div>
-    <div class="key" data-key="h">H</div>
-    <div class="key" data-key="j">J</div>
-    <div class="key" data-key="k">K</div>
-    <div class="key" data-key="l">L</div>
-    <div class="key" data-key=";">;</div>
-    <div class="key" data-key="'">'</div>
-    <div class="key w225 return" data-key="Enter">return</div>
-  </div>
-
-  <!-- Row 5 -->
-  <div class="row">
-    <div class="key w225" data-key="Shift">Shift</div>
-    <div class="key" data-key="z">Z</div>
-    <div class="key" data-key="x">X</div>
-    <div class="key" data-key="c">C</div>
-    <div class="key" data-key="v">V</div>
-    <div class="key" data-key="b">B</div>
-    <div class="key" data-key="n">N</div>
-    <div class="key" data-key="m">M</div>
-    <div class="key" data-key=",">,</div>
-    <div class="key" data-key=".">.</div>
-    <div class="key" data-key="/">/</div>
-    <div class="key w225" data-key="ShiftR">Shift</div>
-  </div>
-
-  <!-- Row 6 -->
-  <div class="row">
-    <div class="key w15" data-key="fn">fn</div>
-    <div class="key w15" data-key="Control">control</div>
-    <div class="key w15" data-key="Alt">option</div>
-    <div class="key w15" data-key="Meta">command</div>
-    <div class="key w7" data-key=" ">Space</div>
-    <div class="key w15" data-key="MetaR">command</div>
-    <div class="key w15" data-key="AltR">option</div>
-    <div class="key" data-key="ArrowLeft">Left</div>
-    <div class="key" style="display:flex;flex-direction:column;gap:2px;">
-      <div class="key" data-key="ArrowUp">Up</div>
-      <div class="key" data-key="ArrowDown">Down</div>
-    </div>
-    <div class="key" data-key="ArrowRight">Right</div>
-  </div>
+  <div id="keyboard"></div>
 </section>
 
 </main>
 
 <script>
+const layouts = {
+  mac: {
+    name: 'Mac (ANSI)',
+    rows: [
+      [
+        { label: 'esc', key: 'Escape' },
+        { label: 'F1', key: 'F1' },
+        { label: 'F2', key: 'F2' },
+        { label: 'F3', key: 'F3' },
+        { label: 'F4', key: 'F4' },
+        { label: 'F5', key: 'F5' },
+        { label: 'F6', key: 'F6' },
+        { label: 'F7', key: 'F7' },
+        { label: 'F8', key: 'F8' },
+        { label: 'F9', key: 'F9' },
+        { label: 'F10', key: 'F10' },
+        { label: 'F11', key: 'F11' },
+        { label: 'F12', key: 'F12' },
+      ],
+      [
+        { label: '`', key: '`' },
+        { label: '1', key: '1' },
+        { label: '2', key: '2' },
+        { label: '3', key: '3' },
+        { label: '4', key: '4' },
+        { label: '5', key: '5' },
+        { label: '6', key: '6' },
+        { label: '7', key: '7' },
+        { label: '8', key: '8' },
+        { label: '9', key: '9' },
+        { label: '0', key: '0' },
+        { label: '−', key: '-' },
+        { label: '=', key: '=' },
+        { label: 'delete', key: 'Backspace', width: 'w175' },
+      ],
+      [
+        { label: 'Tab', key: 'Tab', width: 'w15' },
+        { label: 'Q', key: 'q' },
+        { label: 'W', key: 'w' },
+        { label: 'E', key: 'e' },
+        { label: 'R', key: 'r' },
+        { label: 'T', key: 't' },
+        { label: 'Y', key: 'y' },
+        { label: 'U', key: 'u' },
+        { label: 'I', key: 'i' },
+        { label: 'O', key: 'o' },
+        { label: 'P', key: 'p' },
+        { label: '[', key: '[' },
+        { label: ']', key: ']' },
+        { label: '\\', key: '\\', width: 'w15' },
+      ],
+      [
+        { label: 'Caps Lock', key: 'CapsLock', width: 'w175' },
+        { label: 'A', key: 'a' },
+        { label: 'S', key: 's' },
+        { label: 'D', key: 'd' },
+        { label: 'F', key: 'f' },
+        { label: 'G', key: 'g' },
+        { label: 'H', key: 'h' },
+        { label: 'J', key: 'j' },
+        { label: 'K', key: 'k' },
+        { label: 'L', key: 'l' },
+        { label: ';', key: ';' },
+        { label: "'", key: "'" },
+        { label: 'return', key: 'Enter', width: 'w225', extraClass: 'return' },
+      ],
+      [
+        { label: 'Shift', key: 'Shift', width: 'w225' },
+        { label: 'Z', key: 'z' },
+        { label: 'X', key: 'x' },
+        { label: 'C', key: 'c' },
+        { label: 'V', key: 'v' },
+        { label: 'B', key: 'b' },
+        { label: 'N', key: 'n' },
+        { label: 'M', key: 'm' },
+        { label: ',', key: ',' },
+        { label: '.', key: '.' },
+        { label: '/', key: '/' },
+        { label: 'Shift', key: 'ShiftR', width: 'w225' },
+      ],
+      [
+        { label: 'fn', key: 'fn', width: 'w15' },
+        { label: 'control', key: 'Control', width: 'w15' },
+        { label: 'option', key: 'Alt', width: 'w15' },
+        { label: 'command', key: 'Meta', width: 'w15' },
+        { label: 'Space', key: ' ', width: 'w7' },
+        { label: 'command', key: 'MetaR', width: 'w15' },
+        { label: 'option', key: 'AltR', width: 'w15' },
+        { label: 'Left', key: 'ArrowLeft' },
+        { stack: [
+            { label: 'Up', key: 'ArrowUp' },
+            { label: 'Down', key: 'ArrowDown' },
+          ]
+        },
+        { label: 'Right', key: 'ArrowRight' },
+      ],
+    ],
+  },
+  win: {
+    name: 'Windows (ANSI)',
+    rows: [
+      [
+        { label: 'esc', key: 'Escape' },
+        { label: 'F1', key: 'F1' },
+        { label: 'F2', key: 'F2' },
+        { label: 'F3', key: 'F3' },
+        { label: 'F4', key: 'F4' },
+        { label: 'F5', key: 'F5' },
+        { label: 'F6', key: 'F6' },
+        { label: 'F7', key: 'F7' },
+        { label: 'F8', key: 'F8' },
+        { label: 'F9', key: 'F9' },
+        { label: 'F10', key: 'F10' },
+        { label: 'F11', key: 'F11' },
+        { label: 'F12', key: 'F12' },
+      ],
+      [
+        { label: '`', key: '`' },
+        { label: '1', key: '1' },
+        { label: '2', key: '2' },
+        { label: '3', key: '3' },
+        { label: '4', key: '4' },
+        { label: '5', key: '5' },
+        { label: '6', key: '6' },
+        { label: '7', key: '7' },
+        { label: '8', key: '8' },
+        { label: '9', key: '9' },
+        { label: '0', key: '0' },
+        { label: '-', key: '-' },
+        { label: '=', key: '=' },
+        { label: 'Backspace', key: 'Backspace', width: 'w175' },
+      ],
+      [
+        { label: 'Tab', key: 'Tab', width: 'w15' },
+        { label: 'Q', key: 'q' },
+        { label: 'W', key: 'w' },
+        { label: 'E', key: 'e' },
+        { label: 'R', key: 'r' },
+        { label: 'T', key: 't' },
+        { label: 'Y', key: 'y' },
+        { label: 'U', key: 'u' },
+        { label: 'I', key: 'i' },
+        { label: 'O', key: 'o' },
+        { label: 'P', key: 'p' },
+        { label: '[', key: '[' },
+        { label: ']', key: ']' },
+        { label: '\\', key: '\\', width: 'w15' },
+      ],
+      [
+        { label: 'Caps Lock', key: 'CapsLock', width: 'w175' },
+        { label: 'A', key: 'a' },
+        { label: 'S', key: 's' },
+        { label: 'D', key: 'd' },
+        { label: 'F', key: 'f' },
+        { label: 'G', key: 'g' },
+        { label: 'H', key: 'h' },
+        { label: 'J', key: 'j' },
+        { label: 'K', key: 'k' },
+        { label: 'L', key: 'l' },
+        { label: ';', key: ';' },
+        { label: "'", key: "'" },
+        { label: 'Enter', key: 'Enter', width: 'w225', extraClass: 'return' },
+      ],
+      [
+        { label: 'Shift', key: 'Shift', width: 'w225' },
+        { label: 'Z', key: 'z' },
+        { label: 'X', key: 'x' },
+        { label: 'C', key: 'c' },
+        { label: 'V', key: 'v' },
+        { label: 'B', key: 'b' },
+        { label: 'N', key: 'n' },
+        { label: 'M', key: 'm' },
+        { label: ',', key: ',' },
+        { label: '.', key: '.' },
+        { label: '/', key: '/' },
+        { label: 'Shift', key: 'ShiftR', width: 'w225' },
+      ],
+      [
+        { label: 'Ctrl', key: 'Control', width: 'w15' },
+        { label: 'Win', key: 'Meta', width: 'w15' },
+        { label: 'Alt', key: 'Alt', width: 'w15' },
+        { label: 'Space', key: ' ', width: 'w7' },
+        { label: 'AltGr', key: 'AltR', width: 'w15' },
+        { label: 'Menu', key: 'ContextMenu', width: 'w15' },
+        { label: 'Ctrl', key: 'ControlR', width: 'w15' },
+        { label: 'Left', key: 'ArrowLeft' },
+        { stack: [
+            { label: 'Up', key: 'ArrowUp' },
+            { label: 'Down', key: 'ArrowDown' },
+          ]
+        },
+        { label: 'Right', key: 'ArrowRight' },
+      ],
+    ],
+  }
+};
+
 const counter = {};
 const warned = new Set(); // 儲存有問題的按鍵
+const keyboardEl = document.getElementById('keyboard');
+const layoutSelect = document.getElementById('layoutSelect');
 
-// 初始化所有有 data-key 的按鍵（避免包含作為容器的 .key）
-document.querySelectorAll('.key[data-key]').forEach(keyEl => {
-  const key = keyEl.dataset.key;
+function createKeyElement(keyDef) {
+  const el = document.createElement('div');
+  el.className = ['key', keyDef.width, keyDef.extraClass].filter(Boolean).join(' ');
+  el.dataset.key = keyDef.key;
+  el.textContent = keyDef.label;
+  return el;
+}
 
-  // 計數徽章
-  const badge = document.createElement('div');
-  badge.className = 'badge green';
-  badge.textContent = '0';
-  keyEl.appendChild(badge);
-
-  // 點擊切換警告標記
-  keyEl.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (warned.has(key)) {
-      warned.delete(key);
-      keyEl.querySelector('.warning')?.remove();
-    } else {
-      warned.add(key);
-      const warn = document.createElement('div');
-      warn.className = 'warning';
-      warn.textContent = '!';
-      keyEl.appendChild(warn);
-    }
+function renderKeyboard(layoutName) {
+  const layout = layouts[layoutName] || layouts.mac;
+  keyboardEl.innerHTML = '';
+  layout.rows.forEach(row => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'row';
+    row.forEach(keyDef => {
+      if (keyDef.stack) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'key';
+        wrapper.style.display = 'flex';
+        wrapper.style.flexDirection = 'column';
+        wrapper.style.gap = '2px';
+        keyDef.stack.forEach(stackKey => {
+          const child = createKeyElement(stackKey);
+          wrapper.appendChild(child);
+        });
+        rowEl.appendChild(wrapper);
+      } else {
+        const keyEl = createKeyElement(keyDef);
+        rowEl.appendChild(keyEl);
+      }
+    });
+    keyboardEl.appendChild(rowEl);
   });
-});
+}
+
+function initKeyInteractions() {
+  document.querySelectorAll('.key[data-key]').forEach(keyEl => {
+    const key = keyEl.dataset.key;
+
+    // 計數徽章
+    const badge = document.createElement('div');
+    badge.className = 'badge green';
+    badge.textContent = '0';
+    keyEl.appendChild(badge);
+
+    // 點擊切換警告標記
+    keyEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (warned.has(key)) {
+        warned.delete(key);
+        keyEl.querySelector('.warning')?.remove();
+      } else {
+        warned.add(key);
+        const warn = document.createElement('div');
+        warn.className = 'warning';
+        warn.textContent = '!';
+        keyEl.appendChild(warn);
+      }
+    });
+  });
+}
+
+function resetAll() {
+  Object.keys(counter).forEach(k => delete counter[k]);
+  warned.clear();
+  document.querySelectorAll('.badge').forEach(b => {
+    b.textContent = '0';
+    b.className = 'badge green';
+  });
+  document.querySelectorAll('.warning').forEach(w => w.remove());
+}
 
 // 實體鍵盤輸入（只計數，不影響標記）
 document.addEventListener('keydown', e => {
@@ -373,7 +540,10 @@ document.addEventListener('keydown', e => {
   if (key === ' ') key = ' ';
   if (e.key === 'Meta') key = e.location === 1 ? 'Meta' : 'MetaR';
   if (e.key === 'Alt') key = e.location === 1 ? 'Alt' : 'AltR';
+  if (e.key === 'AltGraph') key = 'AltR';
   if (e.key === 'Shift') key = e.location === 1 ? 'Shift' : 'ShiftR';
+  if (e.key === 'Control') key = e.location === 1 ? 'Control' : 'ControlR';
+  if (e.key === 'ContextMenu') key = 'ContextMenu';
 
   const el = document.querySelector(`[data-key="${key}"]`);
   if (el) {
@@ -391,15 +561,26 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// 佈局切換
+layoutSelect.addEventListener('change', () => {
+  const choice = layoutSelect.value;
+  localStorage.setItem('layout', choice);
+  renderKeyboard(choice);
+  initKeyInteractions();
+  resetAll();
+});
+
+// 初始化佈局
+const savedLayout = localStorage.getItem('layout');
+const initialLayout = layouts[savedLayout] ? savedLayout : 'mac';
+layoutSelect.value = initialLayout;
+renderKeyboard(initialLayout);
+initKeyInteractions();
+resetAll();
+
 // 重設按鈕
 document.getElementById('resetBtn').addEventListener('click', () => {
-  Object.keys(counter).forEach(k => delete counter[k]);
-  warned.clear();
-  document.querySelectorAll('.badge').forEach(b => {
-    b.textContent = '0';
-    b.className = 'badge green';
-  });
-  document.querySelectorAll('.warning').forEach(w => w.remove());
+  resetAll();
 });
 
 // 主題切換與偏好儲存
