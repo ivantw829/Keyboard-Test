@@ -8,18 +8,51 @@
   :root {
     --bg: #f5f5f7;
     --text: #1d1d1f;
+    --muted: #6e6e73;
     --key-bg: #ffffff;
     --key-text: #000000;
     --key-shadow: 0 1px 3px rgba(0,0,0,0.12);
     --accent: #0071e3;
+    --container-bg: #ffffff;
+    --container-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    --btn-border: rgba(0,0,0,0.08);
+  }
+
+  /* 手動覆寫主題：設定 data-theme="light" 或 data-theme="dark" 在 <html> 上 */
+  html[data-theme="light"] {
+    --bg: #f5f5f7;
+    --text: #1d1d1f;
+    --muted: #6e6e73;
+    --container-bg: #ffffff;
+    /* 亮色模式的鍵盤容器陰影：更柔、更淺 */
+    --container-shadow: 0 8px 24px rgba(16,24,40,0.06);
+    --btn-border: rgba(0,0,0,0.08);
+    --key-bg: #ffffff;
+    --key-text: #000000;
+    --key-shadow: 0 1px 3px rgba(16,24,40,0.06);
+  }
+
+  html[data-theme="dark"] {
+    --bg: #1c1c1e;
+    --text: #f5f5f7;
+    --muted: #9b9b9f;
+    --container-bg: #000000;
+    --container-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    --btn-border: rgba(255,255,255,0.08);
+    --key-bg: #2c2c2e;
+    --key-text: #f5f5f7;
+    --key-shadow: 0 1px 6px rgba(0,0,0,0.6);
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #1c1c1e;
       --text: #f5f5f7;
+      --muted: #9b9b9f;
       --key-bg: #2c2c2e;
       --key-text: #f5f5f7;
       --key-shadow: 0 1px 6px rgba(0,0,0,0.6);
+      --container-bg: #000000;
+      --container-shadow: 0 20px 50px rgba(0,0,0,0.6);
     }
   }
 
@@ -42,7 +75,7 @@
   }
   .desc {
     font-size: 17px;
-    color: #86868b;
+    color: var(--muted);
     margin-bottom: 32px;
   }
 
@@ -57,16 +90,30 @@
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0,113,227,0.3);
     transition: all 0.2s ease;
-    margin-bottom: 40px;
+    margin: 0;
   }
   #resetBtn:hover { background: #0060c8; }
   #resetBtn:active { transform: scale(0.98); }
 
+  /* 主題切換按鈕 */
+  #themeToggleBtn {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--btn-border);
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 12px;
+  }
+  #themeToggleBtn:active { transform: translateY(1px); }
+
   .keyboard-container {
-    background: #000000;
+    background: var(--container-bg);
     padding: 20px 18px 28px;
     border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    box-shadow: var(--container-shadow);
   }
 
   .row {
@@ -162,7 +209,10 @@
 
 <h1>鍵盤按鍵診斷工具</h1>
 <p class="desc">點擊按鍵標記問題（紅色驚嘆號），或用實體鍵盤測試次數</p>
-<button id="resetBtn">重設所有計數與標記</button>
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:20px;">
+  <button id="resetBtn">重設所有計數與標記</button>
+  <button id="themeToggleBtn" aria-pressed="false">主題：系統</button>
+</div>
 
 <div class="keyboard-container">
 
@@ -335,6 +385,51 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   });
   document.querySelectorAll('.warning').forEach(w => w.remove());
 });
+
+// 主題切換與偏好儲存
+(function(){
+  const btn = document.getElementById('themeToggleBtn');
+  const root = document.documentElement;
+
+  function effectiveTheme(){
+    const stored = localStorage.getItem('theme');
+    if(stored === 'light' || stored === 'dark') return stored;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function applyTheme(choice){
+    if(choice === 'system' || !choice){
+      root.removeAttribute('data-theme');
+      btn.textContent = '主題：系統';
+      btn.setAttribute('aria-pressed','false');
+    } else {
+      root.setAttribute('data-theme', choice);
+      btn.textContent = choice === 'dark' ? '主題：深色' : '主題：亮色';
+      btn.setAttribute('aria-pressed', 'true');
+    }
+  }
+
+  // 初始化：若有儲存偏好則套用，否則維持系統（顯示目前狀態）
+  const stored = localStorage.getItem('theme');
+  if(stored === 'light' || stored === 'dark') applyTheme(stored);
+  else applyTheme('system');
+
+  // 點擊切換：如果目前是系統或亮色，切為深色；若是深色則切為亮色
+  btn.addEventListener('click', ()=>{
+    const current = root.getAttribute('data-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem('theme', next);
+  });
+
+  // 若使用者想回到「系統」，按住 shift + 點擊
+  btn.addEventListener('click', (e)=>{
+    if(e.shiftKey){
+      localStorage.removeItem('theme');
+      applyTheme('system');
+    }
+  });
+})();
 </script>
 </body>
 </html>
