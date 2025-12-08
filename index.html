@@ -2,8 +2,21 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>鍵盤按鍵診斷工具</title>
+<title>鍵盤按鍵診斷工具 - 免費線上按鍵測試</title>
+<meta name="description" content="免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。支援計數、故障標記、深淺主題切換，幫助您測試和診斷鍵盤問題。">
+<meta name="keywords" content="鍵盤測試,按鍵診斷,鍵盤檢測,線上工具,免費檢測">
+<meta name="author" content="Keyboard Test Tool">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta property="og:title" content="鍵盤按鍵診斷工具 - 免費線上按鍵測試">
+<meta property="og:description" content="免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。支援計數、故障標記、深淺主題切換。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://keyboard.ouoc.net/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="鍵盤按鍵診斷工具">
+<meta name="twitter:description" content="免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。">
+<link rel="canonical" href="https://keyboard.ouoc.net/">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="language" content="zh-TW">
 <style>
   :root {
     --bg: #f5f5f7;
@@ -207,14 +220,15 @@
 </head>
 <body>
 
+<main>
 <h1>鍵盤按鍵診斷工具</h1>
 <p class="desc">點擊按鍵標記問題（紅色驚嘆號），或用實體鍵盤測試次數</p>
 <div style="display:flex;gap:8px;align-items:center;margin-bottom:20px;">
-  <button id="resetBtn">重設所有計數與標記</button>
-  <button id="themeToggleBtn" aria-pressed="false">主題：系統</button>
+  <button id="resetBtn" aria-label="重設所有按鍵計數與標記">重設所有計數與標記</button>
+  <button id="themeToggleBtn" aria-pressed="false" aria-label="切換深淺主題">主題：系統</button>
 </div>
 
-<div class="keyboard-container">
+<section class="keyboard-container" aria-label="鍵盤按鍵診斷區域">
 
   <!-- Row 1 -->
   <div class="row">
@@ -318,7 +332,9 @@
     </div>
     <div class="key" data-key="ArrowRight">Right</div>
   </div>
-</div>
+</section>
+
+</main>
 
 <script>
 const counter = {};
@@ -431,5 +447,51 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   });
 })();
 </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "鍵盤按鍵診斷工具",
+  "description": "免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。支援計數、故障標記、深淺主題切換。",
+  "url": "https://keyboard.ouoc.net/",
+  "applicationCategory": "Utility",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "Keyboard Test"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "如何使用鍵盤診斷工具？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "直接按下您的鍵盤按鍵，工具會自動計數並顯示次數。點擊螢幕上的按鍵可標記有問題的按鍵。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "計數器顯示什麼顏色的徽章？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "綠色表示正常（0-2次），黃色表示有些頻繁（3-5次），紅色表示可能有問題（6次或以上）。"
+      }
+    }
+  ]
+}
+</script>
+
 </body>
 </html>
